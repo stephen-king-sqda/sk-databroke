@@ -106,6 +106,12 @@ src/
     weatherCodes.js        WMO code → label/emoji
 ```
 
+## Ryan Hall, Y'all integration
+
+The app includes a panel that embeds [Ryan Hall, Y'all](https://www.youtube.com/@RyanHallYall)'s livestream directly. Click "Watch live" and the player auto-loads the channel's current broadcast (via YouTube's `embed/live_stream?channel=...` URL — no API key needed).
+
+When an active NWS alert in the configured `severeEvents` list (Tornado / Severe Thunderstorm Warning or Watch, Flash Flood, etc.) appears for your location, the panel **auto-expands** and gets a red severe-mode banner. Disable the panel or tweak the trigger list in `src/config.js` under `RYAN_HALL`.
+
 ## Notes
 
 - Data refreshes every 10 minutes; radar refreshes every 5 minutes.

@@ -147,6 +147,55 @@
 .alert-head { display: flex; justify-content: space-between; gap: 1rem; }
 .alert-desc { white-space: pre-wrap; font-family: inherit; font-size: 0.85rem; }
 
+/* ---------- Ryan Hall panel ---------- */
+.ryan-hall-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ryan-hall h2 { margin-bottom: 0.15rem; }
+.ryan-hall-actions { display: flex; gap: 0.5rem; align-items: center; }
+.ryan-hall-actions button {
+  padding: 0.4rem 0.95rem;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: var(--cell-bg);
+  color: inherit;
+  cursor: pointer;
+  font-weight: 600;
+}
+.ryan-hall-actions button:hover { background: var(--card-border); }
+.ryan-hall-link {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--accent);
+}
+.ryan-hall-embed {
+  margin-top: 0.75rem;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.ryan-hall-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+.ryan-hall-embed p { margin-top: 0.5rem; }
+
+.ryan-hall-severe {
+  border-left: 4px solid #b91c1c;
+  background: linear-gradient(90deg, rgba(185, 28, 28, 0.18), var(--card-bg) 30%);
+}
+.ryan-hall-severe h2::before {
+  content: '🔴 ';
+  font-size: 0.85em;
+}
+
 /* ---------- Radar ---------- */
 .radar-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
 .radar-map-wrap {

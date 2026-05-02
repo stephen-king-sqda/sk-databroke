@@ -5,6 +5,7 @@ import CurrentConditions from './components/CurrentConditions.jsx';
 import HourlyForecast from './components/HourlyForecast.jsx';
 import DailyForecast from './components/DailyForecast.jsx';
 import Alerts from './components/Alerts.jsx';
+import RyanHallPanel from './components/RyanHallPanel.jsx';
 import RadarMap from './components/RadarMap.jsx';
 import './App.css';
 
@@ -61,6 +62,8 @@ export default function App() {
       <CurrentConditions current={forecast?.current} units={forecast?.current_units} />
 
       <Alerts alerts={alerts} />
+
+      <RyanHallPanel alerts={alerts} />
 
       <HourlyForecast hourly={forecast?.hourly} />
 
