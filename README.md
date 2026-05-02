@@ -15,22 +15,53 @@ No API keys, no signup, no paid services.
 
 ## Run locally
 
-One-shot deploy script (recommended):
+### Windows (recommended path)
 
-```bash
-./deploy.sh             # install + build + production preview on :4173 (foreground)
-./deploy.sh --daemon    # same, but in the BACKGROUND so closing the terminal
-                        # doesn't kill it. Logs to ./preview.log
-./deploy.sh --status    # is the daemon running?
-./deploy.sh --logs      # tail the daemon log
-./deploy.sh --stop      # stop the daemon
-./deploy.sh --dev       # install + dev server with HMR on :5173 (foreground)
-./deploy.sh --build     # install + build only (output in ./dist)
-./deploy.sh --host      # bind to 0.0.0.0 so other LAN devices can reach it
-./deploy.sh --port 8080 # override the port
+Easiest: **double-click `deploy.bat`**. It will:
+1. Install dependencies (first run only)
+2. Build the production bundle
+3. Start the server in the background (survives closing the window)
+4. Open `http://localhost:4173/` in your browser
+
+| Command | What it does |
+|---|---|
+| `deploy.bat`        | Start in background + open browser |
+| `deploy.bat stop`   | Stop the background server |
+| `deploy.bat status` | Is it running? |
+| `deploy.bat logs`   | Tail the log |
+| `deploy.bat dev`    | Run the dev server (HMR) in this window |
+
+From PowerShell directly:
+
+```powershell
+.\deploy.ps1 -Daemon     # build + run in background
+.\deploy.ps1 -Stop       # stop background server
+.\deploy.ps1 -Status     # status
+.\deploy.ps1 -Logs       # tail log
+.\deploy.ps1 -Dev        # foreground dev server (Ctrl+C to stop)
+.\deploy.ps1 -Build      # build only
+.\deploy.ps1 -LanHost    # bind 0.0.0.0 (LAN access)
+.\deploy.ps1 -Port 8080  # custom port
 ```
 
-Or use npm directly:
+> If PowerShell blocks the script with an execution-policy error, run it
+> through `.\deploy.bat` instead (the .bat wraps it with `-ExecutionPolicy Bypass`).
+
+### macOS / Linux
+
+```bash
+./deploy.sh             # build + foreground preview on :4173
+./deploy.sh --daemon    # build + run in background (survives terminal close)
+./deploy.sh --stop      # stop daemon
+./deploy.sh --status    # status
+./deploy.sh --logs      # tail log
+./deploy.sh --dev       # dev server with HMR on :5173
+./deploy.sh --build     # build only
+./deploy.sh --host      # bind 0.0.0.0 (LAN access)
+./deploy.sh --port 8080 # custom port
+```
+
+### Plain npm (any OS)
 
 ```bash
 npm install
@@ -38,6 +69,8 @@ npm run dev      # http://localhost:5173 (dev, HMR)
 npm run build    # produces ./dist
 npm run preview  # http://localhost:4173 (serves ./dist)
 ```
+
+**Prerequisite:** [Node.js 18+](https://nodejs.org/) installed.
 
 ## Change location
 
