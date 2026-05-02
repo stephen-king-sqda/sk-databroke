@@ -1,0 +1,177 @@
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.muted { color: var(--muted); }
+.small { font-size: 0.82rem; }
+
+.error {
+  background: #4b1d1d;
+  color: #ffd4d4;
+  border-color: #6e2a2a;
+}
+
+/* ---------- Current ---------- */
+.current-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.current-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.current-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.current-temp {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon-lg { font-size: 4rem; line-height: 1; }
+.temp-lg { font-size: 3rem; font-weight: 600; line-height: 1; }
+
+.current-stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem 1rem;
+}
+.current-stats div { display: flex; justify-content: space-between; }
+.current-stats dt { color: var(--muted); }
+.current-stats dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .current-body { grid-template-columns: 1fr; }
+}
+
+/* ---------- Hourly ---------- */
+.hourly-scroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+}
+.hour-cell {
+  flex: 0 0 64px;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  border-radius: 10px;
+  background: var(--cell-bg);
+}
+.hour-time { font-size: 0.8rem; color: var(--muted); }
+.hour-icon { font-size: 1.4rem; margin: 0.15rem 0; }
+.hour-temp { font-weight: 600; font-variant-numeric: tabular-nums; }
+.hour-pop { font-size: 0.8rem; color: #4ea1ff; }
+.hour-wind { font-size: 0.72rem; }
+
+/* ---------- Daily ---------- */
+.daily-grid { display: flex; flex-direction: column; gap: 0.4rem; }
+.day-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.5fr 0.7fr 0.8fr 1.1fr 1.5fr;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: var(--cell-bg);
+}
+.day-name { line-height: 1.15; }
+.day-icon { font-size: 1.5rem; text-align: center; }
+.day-pop { color: #4ea1ff; text-align: right; font-variant-numeric: tabular-nums; }
+.day-precip { text-align: right; font-variant-numeric: tabular-nums; }
+.day-temps { font-variant-numeric: tabular-nums; }
+.t-max { font-weight: 600; }
+.day-extras { text-align: right; }
+
+@media (max-width: 640px) {
+  .day-row {
+    grid-template-columns: 1fr 0.4fr 0.6fr 1fr;
+    grid-template-areas:
+      "name icon pop temps"
+      "extras extras extras extras";
+  }
+  .day-name { grid-area: name; }
+  .day-icon { grid-area: icon; }
+  .day-pop { grid-area: pop; }
+  .day-temps { grid-area: temps; text-align: right; }
+  .day-precip { display: none; }
+  .day-extras { grid-area: extras; text-align: left; }
+}
+
+/* ---------- Alerts ---------- */
+.alerts-clear h2 { color: #4ade80; }
+.alert-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.alert {
+  border-left: 4px solid #888;
+  background: var(--cell-bg);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+.alert.sev-extreme { border-color: #b91c1c; }
+.alert.sev-severe { border-color: #ea580c; }
+.alert.sev-moderate { border-color: #ca8a04; }
+.alert.sev-minor { border-color: #2563eb; }
+.alert-head { display: flex; justify-content: space-between; gap: 1rem; }
+.alert-desc { white-space: pre-wrap; font-family: inherit; font-size: 0.85rem; }
+
+/* ---------- Radar ---------- */
+.radar-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+.radar-map-wrap {
+  height: 480px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1e1e1e;
+}
+.radar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+.radar-controls input[type="range"] { flex: 1; min-width: 120px; }
+.radar-controls button {
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: var(--cell-bg);
+  color: inherit;
+  cursor: pointer;
+}
+.radar-controls label { display: flex; align-items: center; gap: 0.4rem; }
+
+.footer { text-align: center; padding-top: 0.5rem; }
+.footer a { color: var(--accent); }
