@@ -15,18 +15,23 @@ No API keys, no signup, no paid services.
 
 ## Run locally
 
+One-shot deploy script (recommended):
+
 ```bash
-npm install
-npm run dev
+./deploy.sh             # install + build + production preview on :4173
+./deploy.sh --dev       # install + dev server with HMR on :5173
+./deploy.sh --build     # install + build only (output in ./dist)
+./deploy.sh --host      # bind to 0.0.0.0 so other LAN devices can reach it
+./deploy.sh --port 8080 # override the port
 ```
 
-Then open http://localhost:5173
-
-## Build for production / preview
+Or use npm directly:
 
 ```bash
-npm run build
-npm run preview
+npm install
+npm run dev      # http://localhost:5173 (dev, HMR)
+npm run build    # produces ./dist
+npm run preview  # http://localhost:4173 (serves ./dist)
 ```
 
 ## Change location
