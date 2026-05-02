@@ -7,9 +7,13 @@ A self-hosted React weather dashboard for Bella Vista, AR (Northwest Arkansas), 
 | Source | Used for | Auth |
 |---|---|---|
 | [Open-Meteo](https://open-meteo.com/) | Current conditions, hourly + 7-day forecast | None |
+| [Open-Meteo Air Quality](https://open-meteo.com/en/docs/air-quality-api) | US AQI, PM2.5/10, ozone, NO₂, pollen | None |
 | [NWS API](https://www.weather.gov/documentation/services-web-api) | Active weather alerts | None |
+| [SPC](https://www.spc.noaa.gov/) | Day-1 categorical convective outlook (GeoJSON) | None |
 | [RainViewer](https://www.rainviewer.com/api.html) | Animated radar tiles (past 2h + 30 min nowcast) | None |
+| [Blitzortung](https://www.blitzortung.org/) / [LightningMaps](https://www.lightningmaps.org/) | Real-time lightning strikes (external link) | None |
 | [OpenStreetMap](https://www.openstreetmap.org/) | Basemap tiles | None |
+| [Ryan Hall, Y'all](https://www.youtube.com/@RyanHallYall) | Live severe-weather YouTube stream embed | None |
 
 No API keys, no signup, no paid services.
 
@@ -112,8 +116,26 @@ The app includes a panel that embeds [Ryan Hall, Y'all](https://www.youtube.com/
 
 When an active NWS alert in the configured `severeEvents` list (Tornado / Severe Thunderstorm Warning or Watch, Flash Flood, etc.) appears for your location, the panel **auto-expands** and gets a red severe-mode banner. Disable the panel or tweak the trigger list in `src/config.js` under `RYAN_HALL`.
 
+## Features
+
+- **Current conditions** with rotating wind-direction arrow and 3-hour pressure trend (↑ rising / ↓ falling / → steady)
+- **Sun/moon strip** — sunrise, sunset, daylight-remaining countdown, moon phase + illumination %
+- **Hourly chart** — 24-hour temp + feels-like line over precipitation-probability bars (Recharts)
+- **7-day forecast** with high/low, precip, UV, wind
+- **NWS alerts** with severity color-coding
+- **Browser notifications** — fires a system notification when a new NWS alert appears (asks permission on first click)
+- **Browser tab title** — shows current temp (`58° • Bella Vista, AR`) so it's visible from another tab
+- **SPC severe weather outlook** — pulls today's day-1 categorical GeoJSON, finds which risk zone (TSTM / MRGL / SLGT / ENH / MDT / HIGH) covers the location
+- **Air quality** — US AQI with category color, PM2.5/10, ozone, NO₂
+- **Pollen** — alder, birch, grass, mugwort, olive, ragweed levels
+- **Animated radar** — Leaflet + RainViewer tile overlay, play/scrub/opacity controls
+- **Lightning** — direct link to live LightningMaps.org centered on your location
+- **Ryan Hall, Y'all panel** — YouTube live-stream embed; auto-expands during severe NWS alerts
+- **PWA** — installable on phone/desktop. Adds to home screen, runs in its own window, caches the app shell so it loads even offline (forecast data still needs network)
+
 ## Notes
 
 - Data refreshes every 10 minutes; radar refreshes every 5 minutes.
 - All requests are made directly from the browser; no backend required.
 - Open-Meteo's free tier is for non-commercial use.
+- The service worker is cache-first for app shell, network-only for API requests, so you always see the freshest forecast when online.

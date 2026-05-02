@@ -13,6 +13,7 @@ const HOURLY_VARS = [
   'relative_humidity_2m',
   'cloud_cover',
   'uv_index',
+  'pressure_msl',
 ];
 
 const DAILY_VARS = [
