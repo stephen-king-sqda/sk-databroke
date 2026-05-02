@@ -29,7 +29,8 @@ Easiest: **double-click `deploy.bat`**. It will:
 
 | Command | What it does |
 |---|---|
-| `deploy.bat`        | Start in background + open browser |
+| `deploy.bat`        | Start in background (localhost only) + open browser |
+| `deploy.bat lan`    | Start in background bound to your LAN — other devices on your home Wi-Fi can connect at `http://<your-PC-IP>:4173/` |
 | `deploy.bat stop`   | Stop the background server |
 | `deploy.bat status` | Is it running? |
 | `deploy.bat logs`   | Tail the log |
@@ -109,6 +110,39 @@ src/
   utils/
     weatherCodes.js        WMO code → label/emoji
 ```
+
+## Sharing it with phones / laptops on your home network
+
+The app can serve other devices on your LAN. On Windows:
+
+```cmd
+deploy.bat lan
+```
+
+It binds to `0.0.0.0`, prints all of your machine's IPv4 addresses with the
+matching `http://<ip>:4173/` URLs, and opens the browser locally. Visit one
+of those URLs from another device on the same Wi-Fi/Ethernet to load the app.
+
+On macOS / Linux:
+
+```bash
+./deploy.sh --daemon --host
+```
+
+Then find your IP with `ifconfig` / `ip a` and visit `http://<ip>:4173/` from
+the other device.
+
+**First-run gotchas:**
+- **Windows Firewall** will likely prompt the first time Node.js tries to
+  listen on a non-loopback address. Click **Allow** for *Private* networks
+  (your home Wi-Fi). If you missed the prompt, check
+  Settings → Network & Internet → Windows Defender Firewall →
+  Allow an app through firewall, find Node.js, enable Private.
+- Devices must be on the **same network** (same Wi-Fi SSID, or wired into
+  the same router). They can't reach you over the internet without
+  port-forwarding (which I'd avoid for a home dashboard).
+- Use the **PWA install** option from the phone's browser to add it to the
+  home screen — feels like a native app.
 
 ## Ryan Hall, Y'all integration
 

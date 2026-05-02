@@ -38,6 +38,32 @@ Set-Location $ScriptDir
 $PidFile = Join-Path $ScriptDir 'preview.pid'
 $LogFile = Join-Path $ScriptDir 'preview.log'
 
+function Get-LanIPs {
+    $ips = @()
+    try {
+        $addrs = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop
+        foreach ($a in $addrs) {
+            $ip = $a.IPAddress
+            if ($ip -eq '127.0.0.1') { continue }
+            if ($ip -like '169.254.*') { continue }     # APIPA / link-local
+            if ($a.PrefixOrigin -eq 'WellKnown') { continue }
+            $ips += $ip
+        }
+    } catch {
+        # Fallback for older boxes without NetTCPIP module
+        $output = & ipconfig.exe
+        foreach ($line in $output) {
+            if ($line -match 'IPv4 Address.*:\s*([\d\.]+)') {
+                $ip = $Matches[1]
+                if ($ip -ne '127.0.0.1' -and -not ($ip -like '169.254.*')) {
+                    $ips += $ip
+                }
+            }
+        }
+    }
+    return $ips | Select-Object -Unique
+}
+
 function Get-EffectivePort {
     if ($Port -gt 0) { return $Port }
     return 4173
@@ -273,6 +299,22 @@ if ($Daemon) {
         Write-Host "    PID:    $($proc.Id)"
         Write-Host "    Log:    $LogFile"
         Write-Host "    URL:    http://localhost:$port/"
+        if ($LanHost) {
+            $ips = Get-LanIPs
+            if ($ips.Count -gt 0) {
+                Write-Host ""
+                Write-Host "    LAN access (share with phones/laptops on the same network):"
+                foreach ($ip in $ips) {
+                    Write-Host "        http://${ip}:$port/"
+                }
+                Write-Host ""
+                Write-Host "    NOTE: Windows Firewall may prompt to allow Node.js on first run."
+                Write-Host "          Click ALLOW for Private networks."
+            } else {
+                Write-Host "    LAN access: enabled, but couldn't auto-detect your IP."
+                Write-Host "                Run 'ipconfig' to find your IPv4 address."
+            }
+        }
         Write-Host ""
         Write-Host "    Stop:   .\deploy.ps1 -Stop"
         Write-Host "    Status: .\deploy.ps1 -Status"
