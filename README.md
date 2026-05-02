@@ -18,8 +18,13 @@ No API keys, no signup, no paid services.
 One-shot deploy script (recommended):
 
 ```bash
-./deploy.sh             # install + build + production preview on :4173
-./deploy.sh --dev       # install + dev server with HMR on :5173
+./deploy.sh             # install + build + production preview on :4173 (foreground)
+./deploy.sh --daemon    # same, but in the BACKGROUND so closing the terminal
+                        # doesn't kill it. Logs to ./preview.log
+./deploy.sh --status    # is the daemon running?
+./deploy.sh --logs      # tail the daemon log
+./deploy.sh --stop      # stop the daemon
+./deploy.sh --dev       # install + dev server with HMR on :5173 (foreground)
 ./deploy.sh --build     # install + build only (output in ./dist)
 ./deploy.sh --host      # bind to 0.0.0.0 so other LAN devices can reach it
 ./deploy.sh --port 8080 # override the port

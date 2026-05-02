@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Daemon runtime files
+preview.pid
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
