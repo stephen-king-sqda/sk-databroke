@@ -38,7 +38,10 @@ Set-Location $ScriptDir
 $PidFile = Join-Path $ScriptDir 'preview.pid'
 $LogFile = Join-Path $ScriptDir 'preview.log'
 
-function Get-EffectivePort { if ($Port -gt 0) { $Port } else { 4173 } }
+function Get-EffectivePort {
+    if ($Port -gt 0) { return $Port }
+    return 4173
+}
 
 # Returns $true if the given PID's command line looks like our daemon
 # (cmd.exe wrapper running npm/vite preview), false otherwise.
@@ -46,23 +49,25 @@ function Test-IsOurDaemon {
     param([int]$ProcessId)
     if ($ProcessId -le 0) { return $false }
     try {
-        $cli = (Get-CimInstance -ClassName Win32_Process `
-                                -Filter "ProcessId=$ProcessId" `
-                                -ErrorAction Stop).CommandLine
-    } catch { return $false }
+        $cli = (Get-CimInstance -ClassName Win32_Process -Filter "ProcessId=$ProcessId" -ErrorAction Stop).CommandLine
+    } catch {
+        return $false
+    }
     if (-not $cli) { return $false }
-    return ($cli -match 'vite' -or $cli -match 'npm\s+run\s+preview' -or $cli -match 'preview\.log')
+    if ($cli -match 'vite')               { return $true }
+    if ($cli -match 'npm\s+run\s+preview') { return $true }
+    if ($cli -match 'preview\.log')        { return $true }
+    return $false
 }
 
-# Resolve the PID currently listening on the daemon's TCP port (or $null).
+# Resolve the PID currently listening on the given TCP port (or $null).
 function Get-PortListenerPid {
     param([int]$ListenPort)
     try {
-        $conn = Get-NetTCPConnection -LocalPort $ListenPort -State Listen -ErrorAction Stop |
-                Select-Object -First 1
+        $conn = Get-NetTCPConnection -LocalPort $ListenPort -State Listen -ErrorAction Stop | Select-Object -First 1
         if ($conn) { return [int]$conn.OwningProcess }
     } catch {
-        # netstat fallback for hosts without NetTCPIP module.
+        # netstat fallback for hosts without the NetTCPIP module.
         $line = (& netstat.exe -ano) | Where-Object { $_ -match ":$ListenPort\s+.*LISTENING" } | Select-Object -First 1
         if ($line) {
             $parts = ($line -split '\s+') | Where-Object { $_ }
@@ -83,7 +88,7 @@ function Get-DaemonProcess {
     }
     $proc = Get-Process -Id $procId -ErrorAction SilentlyContinue
     if (-not $proc) {
-        # Stale PID file — clean it up.
+        # Stale PID file: clean it up.
         Remove-Item $PidFile -ErrorAction SilentlyContinue
         return $null
     }
@@ -98,10 +103,10 @@ function Get-DaemonProcess {
 }
 
 function Stop-Daemon {
-    $stopped = @()
+    $stopped = New-Object System.Collections.Generic.List[int]
     $port = Get-EffectivePort
 
-    # 1. Kill the recorded PID (if it's actually ours).
+    # 1. Kill the recorded PID (only if it's actually ours).
     if (Test-Path $PidFile) {
         $raw = Get-Content $PidFile -ErrorAction SilentlyContinue | Select-Object -First 1
         $procId = 0
@@ -110,7 +115,7 @@ function Stop-Daemon {
             if ($proc -and (Test-IsOurDaemon -ProcessId $procId)) {
                 Write-Host "Killing recorded daemon (PID $procId)..."
                 & taskkill.exe /PID $procId /T /F 2>&1 | Out-Null
-                $stopped += $procId
+                $stopped.Add($procId)
             }
         }
     }
@@ -119,17 +124,18 @@ function Stop-Daemon {
     #    orphaned children when the recorded PID is gone but a node.exe is
     #    still listening.
     $portPid = Get-PortListenerPid -ListenPort $port
-    if ($portPid -and ($stopped -notcontains $portPid)) {
+    if ($portPid -and (-not $stopped.Contains($portPid))) {
         Write-Host "Killing process bound to port $port (PID $portPid)..."
         & taskkill.exe /PID $portPid /T /F 2>&1 | Out-Null
-        $stopped += $portPid
+        $stopped.Add($portPid)
     }
 
     # 3. Always remove the PID file.
     Remove-Item $PidFile -ErrorAction SilentlyContinue
 
     if ($stopped.Count -gt 0) {
-        Write-Host ("Stopped {0} process(es): {1}" -f $stopped.Count, ($stopped -join ', '))
+        $list = $stopped -join ', '
+        Write-Host "Stopped $($stopped.Count) process(es): $list"
     } else {
         Write-Host "No daemon was running."
     }
@@ -145,13 +151,13 @@ function Show-Status {
         Write-Host "Log: $LogFile"
         Write-Host "URL: http://localhost:$port/"
         if ($portPid -and $portPid -ne $proc.Id) {
-            Write-Host "Note: a different PID ($portPid) is bound to port $port — investigate."
+            Write-Host "Note: a different PID ($portPid) is bound to port $port. Investigate."
         }
     } else {
         Write-Host "Daemon NOT running."
         if ($portPid) {
             Write-Host "Note: port $port is in use by PID $portPid (not tracked by this script)."
-            Write-Host "      Use '.\deploy.ps1 -Stop' to free it."
+            Write-Host "      Run '.\deploy.ps1 -Stop' to free it."
         }
     }
 }
@@ -204,7 +210,7 @@ function Get-ServerArgs {
     $a = @()
     if ($LanHost) { $a += '--host' }
     if ($Port -gt 0) { $a += '--port'; $a += "$Port" }
-    return $a
+    return ,$a
 }
 
 # --- Mode dispatch -----------------------------------------------------------
@@ -257,11 +263,8 @@ if ($Daemon) {
     $extra = (Get-ServerArgs) -join ' '
     # cmd /c lets us redirect stdout+stderr to one file. cmd.exe stays alive
     # until npm exits; killing it with taskkill /T also kills the children.
-    $cmdLine = "npm run preview -- $extra > `"$LogFile`" 2>&1"
-    $proc = Start-Process -FilePath 'cmd.exe' `
-        -ArgumentList '/c', $cmdLine `
-        -WindowStyle Hidden `
-        -PassThru
+    $cmdLine = 'npm run preview -- ' + $extra + ' > "' + $LogFile + '" 2>&1'
+    $proc = Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', $cmdLine -WindowStyle Hidden -PassThru
     [System.IO.File]::WriteAllText($PidFile, "$($proc.Id)")
     Start-Sleep -Seconds 3
 
@@ -288,6 +291,6 @@ Write-Host "==> Building production bundle"
 & npm run build
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "==> Starting preview server (Ctrl+C to stop)"
-Write-Host "    Tip: run '.\deploy.ps1 -Daemon' to keep it running after closing this window."
+Write-Host "    Tip: run .\deploy.ps1 -Daemon to keep it running after closing this window."
 $extra = Get-ServerArgs
 & npm run preview -- @extra
