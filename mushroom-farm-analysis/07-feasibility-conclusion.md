@@ -1,8 +1,10 @@
 # 07 — Feasibility Verdict and 12-Month Plan
 
-## Is this feasible? Short answer: **Yes, conditionally.**
+## Is this feasible? Short answer: **Yes, conditionally — and 2026 is the best window in a generation to start.**
 
 A small specialty mushroom farm at "farmers market + local supplier" scale is **financially viable, structurally favorable, and underserved in most US metros**. It is also one of the most operationally demanding small-food businesses you can run. The viability is not the question — fit with the operator is.
+
+**The macro is unusually aligned in 2026.** The US cattle herd sits at 86.2M head — a 75-year low — with the 2025 calf crop the smallest since 1941. Ground beef is at a record ~$6.70/lb and the USDA forecasts another 10% rise in 2026. Beef cannot biologically rebuild before 2028, giving mushroom producers a **3-year window of structurally elevated relative demand** and a brand-new wholesale channel (the mushroom-beef burger blend) that didn't economically exist before 2024. See [08-beef-tailwind.md](./08-beef-tailwind.md).
 
 ## Go / no-go scorecard
 
@@ -95,6 +97,7 @@ If those don't disqualify you, the numbers in [03-startup-and-financials.md](./0
 - **Tier 2 (~$15k–$30k, 400–600 sq ft) is the sweet spot.** Tier 1 is a good pilot. Tier 3 is premature for most.
 - **Channel discipline is what separates profitable farms from busy hobbies.** Farmers market + 6–10 restaurant accounts + CSA is the proven recipe.
 - **Contamination and burnout are the two non-financial killers.** Defend against both with discipline and early hiring.
-- **At year 3, a focused owner-operator is realistically earning $35k–$50k of net income from 35 hrs/week of work on a $25k investment.** That's a strong outcome by small-business standards — comparable to a successful food truck and considerably more capital-efficient.
+- **At year 3, a focused owner-operator is realistically earning $35k–$50k of net income from 35 hrs/week of work on a $25k investment** in the base case. With the burger-blend wholesale channel actively pursued, year-3 revenue can reach **$110k–$140k** and net income **$55k–$75k**. That's a strong outcome by small-business standards — comparable to a successful food truck and considerably more capital-efficient.
+- **The beef tailwind is the difference between a good business and a great one over the next 3 years.** Operators who explicitly position around "local protein at beef-substitute prices" and chase the burger-blend wholesale channel will compound brand and customer relationships faster than they could in a normal beef market.
 
 The verdict: **build it, but build it in the right order.**
