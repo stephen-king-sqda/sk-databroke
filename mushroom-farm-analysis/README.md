@@ -24,6 +24,7 @@ This analysis assumes you are a **first-time operator** building toward farmers-
 | [06-risks-and-regulations.md](./06-risks-and-regulations.md) | Contamination, regulatory/licensing, top failure modes |
 | [07-feasibility-conclusion.md](./07-feasibility-conclusion.md) | Go/no-go scorecard, recommended 12-month plan |
 | [08-beef-tailwind.md](./08-beef-tailwind.md) | Beef supply contraction (75-year-low herd), blended-burger channel, revised revenue ceiling |
+| [09-family-home-growing.md](./09-family-home-growing.md) | Hobby/family scale: cheapest path to fresh mushrooms at home — buy substrate + culture vials, optionally make your own culture |
 
 ## Bottom-line numbers (target small operation)
 
